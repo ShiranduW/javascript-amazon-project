@@ -23,7 +23,7 @@ products.forEach((product) => {
           </div>
 
           <div class="product-quantity-container">
-            <select>
+            <select class = "js-quantity-selector-${product.id}">
               <option selected value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
@@ -46,7 +46,7 @@ products.forEach((product) => {
 
           
           <button class="add-to-cart-button button-primary js-add-to-cart-button"
-          data-product-name='${product.id}'>
+          data-product-id='${product.id}'>
             Add to Cart
           </button>
         </div>`;
@@ -57,26 +57,43 @@ products.forEach((product) => {
 document.querySelectorAll(".js-add-to-cart-button").forEach((button) => {
   button.addEventListener("click", () => {
     //console.log('Added product');
-    const productName = button.dataset.productId;
-    console.log(productName);
+    const productId = button.dataset.productId;
+    //console.log(productId);
 
     // check if the product is already in the cart.
     let matchingCartItem;
+
     cart.forEach((item) => {
-      if (productId === item.productName) {
+      if (productId === item.productId) {
         matchingCartItem = item;
       }
     });
+
+    // Create select interactive.
+    const quantitySelector = document.querySelector(
+      `.js-quantity-selector-${productId}`
+    );
+    const quantity = Number(quantitySelector.value);
+
     // if it in the cart, increase the quantity.
     if (matchingCartItem) {
-      matchingCartItem.quantity++;
+      matchingCartItem.quantity += quantity;
       // if it is not in the cart, push it into the cart.
     } else {
       cart.push({
         productId: productId,
-        quantity: 1,
+        quantity: quantity,
       });
     }
+
+    // Make the cart interactive.
+    let cartQuantity = 0;
+    cart.forEach((cartItem) => {
+      cartQuantity += cartItem.quantity;
+    });
+    console.log(cartQuantity);
+    document.querySelector(".js-cart-quantity").innerHTML = cartQuantity;
+
     console.log(cart);
   });
 });
