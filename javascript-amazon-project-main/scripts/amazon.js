@@ -1,4 +1,4 @@
-import { cart } from "../data/cart.js";
+import { cart, addToCart } from "../data/cart.js";
 import { products } from "../data/products.js";
 
 products.forEach((product) => {
@@ -57,6 +57,32 @@ products.forEach((product) => {
   document.querySelector(".js-products-grid").innerHTML += html;
 });
 
+function updateCartQuantity() {
+  // Make the cart interactive.
+  let cartQuantity = 0;
+  cart.forEach((cartItem) => {
+    cartQuantity += cartItem.quantity;
+  });
+  console.log(cartQuantity);
+  document.querySelector(".js-cart-quantity").innerHTML = cartQuantity;
+
+  console.log(cart);
+}
+
+function addedToCartMessage(productId) {
+  // Create "Added" message.
+  const addedMessage = document.querySelector(`.js-added-to-cart-${productId}`);
+
+  addedMessage.classList.add("added-to-cart-visible");
+
+  clearTimeout(timeout);
+
+  // After 2 seconds, remove the "Added" message.
+  timeout = setTimeout(() => {
+    addedMessage.classList.remove("added-to-cart-visible");
+  }, 2000);
+}
+
 let timeout;
 
 document.querySelectorAll(".js-add-to-cart-button").forEach((button) => {
@@ -64,56 +90,8 @@ document.querySelectorAll(".js-add-to-cart-button").forEach((button) => {
     //console.log('Added product');
     const productId = button.dataset.productId;
     //console.log(productId);
-
-    // check if the product is already in the cart.
-    let matchingCartItem;
-
-    cart.forEach((item) => {
-      if (productId === item.productId) {
-        matchingCartItem = item;
-      }
-    });
-
-    // Create select interactive.
-    const quantitySelector = document.querySelector(
-      `.js-quantity-selector-${productId}`
-    );
-    const quantity = Number(quantitySelector.value);
-
-    // if it in the cart, increase the quantity.
-    if (matchingCartItem) {
-      matchingCartItem.quantity += quantity;
-      // if it is not in the cart, push it into the cart.
-    } else {
-      cart.push({
-        productId: productId,
-        quantity: quantity,
-      });
-    }
-
-    // Make the cart interactive.
-    let cartQuantity = 0;
-    cart.forEach((cartItem) => {
-      cartQuantity += cartItem.quantity;
-    });
-    console.log(cartQuantity);
-    document.querySelector(".js-cart-quantity").innerHTML = cartQuantity;
-
-    console.log(cart);
-
-    // Create "Added" message.
-    const addedMessage = document.querySelector(
-      `.js-added-to-cart-${productId}`
-    );
-
-    addedMessage.classList.add("added-to-cart-visible");
-
-    clearTimeout(timeout);
-
-    // After 2 seconds, remove the "Added" message.
-    timeout = setTimeout(() => {
-      addedMessage.classList.remove("added-to-cart-visible");
-    }, 2000);
-
+    addToCart(productId);
+    updateCartQuantity();
+    addedToCartMessage(productId);
   });
 });
