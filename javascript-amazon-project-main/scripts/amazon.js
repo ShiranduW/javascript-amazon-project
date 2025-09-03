@@ -1,3 +1,6 @@
+import { cart } from "../data/cart.js";
+import { products } from "../data/products.js";
+
 products.forEach((product) => {
   //console.log(product);
   let html = `<div class="product-container">
@@ -39,7 +42,7 @@ products.forEach((product) => {
 
           <div class="product-spacer"></div>
 
-          <div class="added-to-cart">
+          <div class="added-to-cart js-added-to-cart-${product.id}">
             <img src="images/icons/checkmark.png">
             Added
           </div>
@@ -53,6 +56,8 @@ products.forEach((product) => {
 
   document.querySelector(".js-products-grid").innerHTML += html;
 });
+
+let timeout;
 
 document.querySelectorAll(".js-add-to-cart-button").forEach((button) => {
   button.addEventListener("click", () => {
@@ -95,5 +100,20 @@ document.querySelectorAll(".js-add-to-cart-button").forEach((button) => {
     document.querySelector(".js-cart-quantity").innerHTML = cartQuantity;
 
     console.log(cart);
+
+    // Create "Added" message.
+    const addedMessage = document.querySelector(
+      `.js-added-to-cart-${productId}`
+    );
+
+    addedMessage.classList.add("added-to-cart-visible");
+
+    clearTimeout(timeout);
+
+    // After 2 seconds, remove the "Added" message.
+    timeout = setTimeout(() => {
+      addedMessage.classList.remove("added-to-cart-visible");
+    }, 2000);
+
   });
 });
