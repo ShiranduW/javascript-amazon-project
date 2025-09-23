@@ -38,10 +38,11 @@ export function addToCart(productId) {
 }
 
 // After click delete link,
-// Remove a productId from the cart.
+// First, Remove a productId from the cart.
 // Steps, 1. create a new array.
 // 2. loop through the cart.
 // 3. add each product to the new array, except for this productId.
+
 export function removeFromCart(productId) {
   const newCart = [];
   cart.forEach((cartItem) => {

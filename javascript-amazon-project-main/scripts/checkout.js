@@ -1,4 +1,4 @@
-import { cart,removeFromCart} from "../data/cart.js";
+import { cart, removeFromCart } from "../data/cart.js";
 import { products } from "../data/products.js";
 import { formatCurrency } from "./util/money.js";
 
@@ -14,7 +14,8 @@ cart.forEach((cartItem) => {
     }
   });
 
-  let html = `<div class="cart-item-container">
+  let html = `<div class="cart-item-container 
+              js-cart-item-container-${matchingProduct.id}">
             <div class="delivery-date">
               Delivery date: Tuesday, June 21
             </div>
@@ -99,15 +100,23 @@ cart.forEach((cartItem) => {
   //console.log(cartSummaryHtml);
   document.querySelector(".js-order-summary").innerHTML = cartSummaryHtml;
 
-  // Delete button in the cart item.
-  // After click delete button, 1. Remove the item from the cart. 2. Update the HTML.
-  document.querySelectorAll('.js-delete-link')
-   .forEach((deleteLink) => {
-    deleteLink.addEventListener('click', () => {
+  // Delete link in the cart item.
+  // After click delete link, 
+  // 1. Remove the productId from the cart. 
+  // 2. Update the HTML.
+  document.querySelectorAll(".js-delete-link").forEach((deleteLink) => {
+    deleteLink.addEventListener("click", () => {
       const productId = deleteLink.dataset.productId;
       console.log(productId);
-      // Remove a productId from the cart.
+      // First, Remove a productId from the cart. this function in cart.js.
       removeFromCart(productId);
+
+      // Second, Update the HTML
+      // Steps, 1. Use the DOM to get the element to remove.
+      // 2. Use .remove() method to remove the element.
+      const container = document.querySelector(`
+        .js-cart-item-container-${productId}`)
+      container.remove();
     });
-   });
   });
+});
