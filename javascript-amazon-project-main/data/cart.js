@@ -1,4 +1,8 @@
-export let cart = [
+// Get cart from local storage. Cart item is as object so in this convert it to string.
+export let cart = JSON.parse(localStorage.getItem('cart'));
+// Save default value. If cart is null show this items in checkout page.
+if (!cart) {
+  cart =[
   {
     productId: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
     quantity: 2
@@ -8,6 +12,12 @@ export let cart = [
     quantity: 1
   }
 ];
+}
+
+// Save cart to local storage.
+function saveToLocalStorage() {
+  localStorage.setItem('cart', JSON.stringify(cart));
+}
 
 export function addToCart(productId) {
   // check if the product is already in the cart.
@@ -35,6 +45,7 @@ export function addToCart(productId) {
       quantity: quantity,
     });
   }
+  saveToLocalStorage();
 }
 
 // After click delete link,
@@ -52,4 +63,5 @@ export function removeFromCart(productId) {
     }
   });
   cart = newCart;
+  saveToLocalStorage();
 }
