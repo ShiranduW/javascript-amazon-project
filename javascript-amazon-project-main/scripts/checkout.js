@@ -29,10 +29,28 @@ cart.forEach((cartItem) => {
     }
   });
 
+  const deliveryOptionId = cartItem.deliveryOptions;
+  let deliveryOption;
+
+  deliveryOptions.forEach((option) => {
+    if (option.id === deliveryOptionId) {
+      deliveryOption = option;
+    }
+  });
+
+      const today = dayjs();
+      const deliveryDate =  today.add(
+      deliveryOption.deliveryDays,
+            'days' 
+          );
+      const dateString = deliveryDate.format(
+            'dddd, MMMM D'
+          );
+
   let html = `<div class="cart-item-container 
               js-cart-item-container-${matchingProduct.id}">
             <div class="delivery-date">
-              Delivery date: Tuesday, June 21
+              Delivery date: ${dateString}
             </div>
 
             <div class="cart-item-details-grid">
@@ -73,7 +91,7 @@ cart.forEach((cartItem) => {
                 <div class="delivery-options-title">
                   Choose a delivery option:
                 </div>
-                ${deliveryOptionHTML(matchingProduct)}
+                ${deliveryOptionHTML(matchingProduct, cartItem)}
               </div>
             </div>
           </div>
@@ -88,7 +106,7 @@ cart.forEach((cartItem) => {
   // 1. Loop through delivery options.
   // 2. For each oprtion, generate some HTML.
   // 3. Combine the HTML together.
-  function deliveryOptionHTML() {
+  function deliveryOptionHTML(matchingProduct, cartItem) {
     let html = ''
     deliveryOptions.forEach((deliveryOption) => {
       const today = dayjs();
@@ -106,10 +124,14 @@ cart.forEach((cartItem) => {
         : `$${formatCurrency(deliveryOption.
           priceCents)} -`;
 
+          const isChecked = deliveryOption.id ===
+          cartItem.deliveryOptions;
+
           html +=
       `
                <div class="delivery-option">
                   <input type="radio"
+                    ${isChecked ? 'checked' : ''}
                     class="delivery-option-input"
                     name="delivery-option-${matchingProduct.id}">
                   <div>
