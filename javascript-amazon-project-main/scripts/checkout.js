@@ -9,6 +9,7 @@ import { formatCurrency } from "./util/money.js";
 // External library esm version.
 import dayjs from "https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js";
 import { deliveryOptions } from "../data/deliveryOptions.js";
+import { updateDeliveryOption } from "../data/cart.js";
 
 // External library.
 hello();
@@ -129,7 +130,9 @@ cart.forEach((cartItem) => {
 
           html +=
       `
-               <div class="delivery-option">
+               <div class="delivery-option js-delivery-option"
+               product-id="${matchingProduct.id}"
+               delivery-option-id="${deliveryOption.id}">
                   <input type="radio"
                     ${isChecked ? 'checked' : ''}
                     class="delivery-option-input"
@@ -228,3 +231,10 @@ function updateCartQuantity() {
 }
 
 updateCartQuantity();
+
+document.querySelectorAll('.js-delivery-option').forEach((deliveryOption) => {
+  deliveryOption.addEventListener('click', () => {
+    const { productId, deliveryOptionId } = deliveryOption.dataset;
+    updateDeliveryOption(productId, deliveryOptionId);
+  })
+})
